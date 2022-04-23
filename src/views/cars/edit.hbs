@@ -4,15 +4,15 @@
 
             <div class="card">
                 <div class="card-body">
-                    <form action="/links/add" method="POST">
+                    <form action="/cars/edit/{{cars.id}}" method="POST">
                         <div class="form-group">
-                            <input type="text" name="placa" class="form-control" placeholder="Placa" autofocus>
+                            <input type="text"  value = "{{cars.placa}}" name="placa" class="form-control" placeholder="Placa" autofocus>
                         </div>
                         <div class="form-group">
-                            <input type="text" name="tipo" class="form-control" placeholder="Tipo de vehiculo">
+                            <input type="text" value = "{{cars.tipo}}" name="tipo" class="form-control" placeholder="Tipo de vehiculo">
                         </div>
                         <div class="form-group">
-                            <textarea name="description" rows="2" class="form-control" placeholder="Description"></textarea>
+                            <textarea name="description"  rows="2" class="form-control" placeholder="Description">{{cars.description}}</textarea>
                         </div>
                         <div class="form-group">
                             <button class="btn btn-success btn-block">

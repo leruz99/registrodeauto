@@ -4,47 +4,50 @@ const req = require('express/lib/request');
 const res = require('express/lib/response');
 const router = express.Router();
 const pool = require('../database');
+const { isLoggedIn } = require('../lib/auth');
 
-router.get('/add', (req, res) => {
-    res.render('links/add');
+
+router.get('/add', isLoggedIn, (req, res) => {
+    res.render('cars/add');
 })
 //RUTA PARA REGISTAR UN CARRO O MOT EN BASE DE DATOS 
-router.post('/add', async(req, res) => {
+router.post('/add', isLoggedIn,  async(req, res) => {
     const {placa, tipo, description} = req.body;
     const newlinks = {
         placa,
         tipo,
-        description
+        description,
+        user_id: req.user.id
     };
     await pool.query('INSERT INTO cars set ?', [newlinks]);
     req.flash("success", 'Vehicle saved successfully');
     /* console.log(newlinks); */
-    res.redirect('/links')
+    res.redirect('/cars')
 });
-router.get('/', async(req, res) => {
-    const cars = await pool.query('SELECT * FROM cars');
+router.get('/', isLoggedIn, async(req, res) => {
+    const cars = await pool.query('SELECT * FROM cars WHERE user_id = ?' , [req.user.id]);
     
-    res.render('links/list', {cars});
+    res.render('cars/cars', {cars});
     
 
 });
 //PARA MOSTRAR EN PANTALLA LOS VEHICULOS AGREGADOS 
-router.get('/delete/:id', async(req, res) => {
+router.get('/delete/:id', isLoggedIn, async(req, res) => {
     const {id} = req.params;
     await pool.query('DELETE FROM cars Where ID =?', [id]);
     req.flash("success", 'Vehicle remove successfully');
-    res.redirect('/links');
+    res.redirect('/cars');
 })
 //PARA OBTENER LA INFORMACION DE UN AUTO U MANDARLA A UN FORMULARIO PARA EDITARLA
-router.get('/edit/:id',async(req, res) => {
+router.get('/edit/:id',isLoggedIn,  async(req, res) => {
     
     const {id} = req.params;
     const cars = await pool.query('SELECT * FROM cars WHERE id =?', [id]);
-    res.render('links/edit', {cars: cars[0]});
+    res.render('cars/edit', {cars: cars[0]});
 
 })
 //METODO PARA ACTUALIZAR EL VEHICULOS
-router.post('/edit/:id', async(req, res) => {
+router.post('/edit/:id',isLoggedIn, async(req, res) => {
     const {id} = req.params;
     const {placa, tipo, description} = req.body;
     const newlinks = {
@@ -56,7 +59,7 @@ router.post('/edit/:id', async(req, res) => {
     await pool.query('UPDATE cars set ? WHERE id =?', [newlinks, id]);
     req.flash("success", 'Vehicle Updated  Successfully');
     
-    res.redirect('/links');
+    res.redirect('/cars');
 }); 
 
 
