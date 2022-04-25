@@ -1,3 +1,4 @@
+const res = require('express/lib/response');
 const passport = require('passport');
 const pool = require('../database');
 const helpers = require('../lib/helpers');
@@ -32,12 +33,15 @@ passport.use('local.signup', new LocalStrategy({
     passwordField: 'password',
     passReqToCallback: true,
 }, async(req, name, password, done) => {
-    const {email} = req.body;
+    const {email, tipo, description} = req.body;
     const newUser = {
         name,
         password,
-        email
+        email,
+        tipo, 
+        description
     }
+    console.log(newUser.tipo);
     newUser.password = await helpers.encryptPassword(password);
     const result = await pool.query('INSERT INTO users SET ?', [newUser]);
     newUser.id = result.insertId;

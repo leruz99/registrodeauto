@@ -17,6 +17,18 @@
               <input type="password" name="password" placeholder="Password" class="form-control">
             </div>
             <div class="form-group">
+              <select  class="form-control" name="tipo">
+              <option value="estudiante">Estudiante</option>
+              <option value="profesor" >Profesor</option>
+              <option value="administrativo">Administrativo</option>
+              <option value="visitante">Visitante</option>
+{{!--               <option value="vijilante">Vijilante</option> --}}
+            </select>
+            </div>
+            <div class="form-group">
+              <textarea name="description" rows="2" class="form-control" placeholder="Description"></textarea>
+            </div>
+            <div class="form-group">
               <button class="btn btn-success btn-block">
                 SingUp
               </button>
